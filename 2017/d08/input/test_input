@@ -1,0 +1,7 @@
+o inc 394 if tcy >= -3
+s inc -204 if s <= -5
+keq inc -34 if keq > -6
+ip inc 762 if ip == 4
+zr inc -644 if ip >= 6
+myk dec 894 if yq == -10
+pc dec -990 if keq > -44
