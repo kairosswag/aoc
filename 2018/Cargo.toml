@@ -6,3 +6,5 @@ authors = ["Kai Rosswag <kairosswag@gmail.com>"]
 [dependencies]
 aoc-runner = '*'
 aoc-runner-derive = '*'
+
+regex = "1"
