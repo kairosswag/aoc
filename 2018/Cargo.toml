@@ -8,3 +8,4 @@ aoc-runner = '*'
 aoc-runner-derive = '*'
 
 regex = "1"
+derive-new = "0.5"
