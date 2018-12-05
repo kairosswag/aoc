@@ -113,6 +113,49 @@ pub fn part1(protocol: &[Timestamp]) -> u32 {
     panic!("No Result");
 }
 
+#[aoc(day4, part2)]
+pub fn part2(protocol: &[Timestamp]) -> u32 {
+    let mut schedule = HashMap::new();
+    // let mut total = HashMap::new();
+    let mut minuteplans = HashMap::new();
+
+    let mut guard = 0;
+    let mut curr_timest = None;
+    
+    for &timest in protocol {
+        match timest.event {
+            Event::Sleep => {
+                let times = schedule.entry(guard).or_insert(Vec::new());
+                times.push(timest);
+                curr_timest = Some(timest);
+            }, 
+            Event::Wake => {
+                let times = schedule.entry(guard).or_insert(Vec::new());
+                times.push(timest);
+                let mut minuteplan : &mut [u32] = minuteplans.entry(guard).or_insert(vec![0;60]);
+                for idx in curr_timest.unwrap().min..timest.min {
+                    minuteplan[idx as usize] += 1;
+                }
+            },
+            Event::Guard(guard_id) => {
+                guard = guard_id;
+            }
+        }
+    }
+    if let Some((k, v)) = minuteplans.iter().max_by_key(|&(k, v)| v.iter().max().unwrap()) {
+        let mut max_idx = 0;
+        let mut max = 0;
+        for i in 0..v.len() {
+            if v[i] > max {
+                max = v[i];
+                max_idx = i;
+            }
+        }
+        return (max_idx as u32) * k;
+    }
+    panic!("No result found!");
+}
+
 #[cfg(test)]
 pub mod test {
     #[test]
