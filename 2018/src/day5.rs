@@ -5,26 +5,32 @@ pub fn part1(input: &str) -> usize {
     let max = polymer.len();
     let mut count = polymer.len();
     let mut curr_idx = 0;
+
     while curr_idx != max {
-        if curr_idx > 0 && polymer[curr_idx] == '0' {
-            curr_idx -= 1;
-            continue;
+
+        if polymer[curr_idx] == '0' {
+            if curr_idx == 0  {
+                curr_idx = idx_next_char(&polymer, curr_idx).unwrap();
+                continue;
+            } else if curr_idx > 0 {
+                curr_idx -= 1;
+                continue;
+            }
         }
-        if curr_idx == 0 && polymer[curr_idx] == '0' {
-            curr_idx = idx_next_char(&polymer, curr_idx).unwrap();
-            continue;
-        }
-        if let Some(next) = idx_next_char(&polymer, curr_idx){
+        
+        if let Some(next) = idx_next_char(&polymer, curr_idx) {
 
             let curr_char = polymer[curr_idx];
             let next_char = polymer[next];
+
             if curr_char != next_char && curr_char.to_ascii_uppercase() == next_char.to_ascii_uppercase() {
                 polymer[curr_idx] = '0';
                 polymer[next] = '0';
+
                 count -= 2;
-                continue;
-            } 
-            curr_idx = next;
+            } else {
+                curr_idx = next;
+            }
         } else {
             break;
         }
@@ -44,6 +50,56 @@ fn idx_next_char(array: &[char], curr: usize) -> Option<usize> {
     } else {
         return Some(res_idx);
     }
+}
+
+#[aoc(day5, part2)]
+pub fn part2(input: &str) -> usize {
+    "abcdefghijklmnopqrstuvwxyz".chars().map(|ch| part2_help(input, ch)).min().expect("No result?")
+}
+
+fn part2_help(input: &str, character: char) -> usize {
+    let mut polymer : Vec<char> = input.chars().map(|ch| {
+        if ch.to_ascii_lowercase() == character {
+            '0'
+        } else {
+            ch
+        }
+    }).collect();
+    let max = polymer.len();
+    // let mut count = polymer.iter().filter(|&&c| c != '0').count();
+    let mut curr_idx = 0;
+
+    while curr_idx != max {
+
+        if polymer[curr_idx] == '0' {
+            if curr_idx == 0  {
+                curr_idx = idx_next_char(&polymer, curr_idx).unwrap();
+                continue;
+            } else if curr_idx > 0 {
+                curr_idx -= 1;
+                continue;
+            }
+        }
+        
+        if let Some(next) = idx_next_char(&polymer, curr_idx) {
+
+            let curr_char = polymer[curr_idx];
+            let next_char = polymer[next];
+
+            if curr_char != next_char && curr_char.to_ascii_uppercase() == next_char.to_ascii_uppercase() {
+                polymer[curr_idx] = '0';
+                polymer[next] = '0';
+
+                // count -= 2;
+            } else {
+                curr_idx = next;
+            }
+        } else {
+            break;
+        }
+    }
+    // println!("{}", count);
+    polymer.iter().filter(|&&c| c != '0').count()
 }
 
 #[cfg(test)]
