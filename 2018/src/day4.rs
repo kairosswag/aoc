@@ -100,19 +100,17 @@ pub fn part1(protocol: &[Timestamp]) -> u32 {
         let mut minutes = vec![0; 60];
         guard_sched.sort();
         for idx in 0..guard_sched.len() / 2 {
-            for &t_min in guard_sched[2*idx].min..guard_sched[2*idx+1].min {
-                minutes[t_min] += 1;
+            for t_min in guard_sched[2*idx].min..guard_sched[2*idx+1].min {
+                minutes[t_min as usize] += 1;
             }
         }
-        println!("value: {}", v);
-        // if let Some((idx, val)) = minutes.iter().zip(0..).max_by_key(|(val, idx)| val) {
-
-        //     println!("minutes: {} @ {} ---- {:?}", idx, val, minutes);
-        // }
-    } else {
-        panic!("No Result");
-    }
-    6
+        println!("key: {}, value: {}", k, v);
+        if let Some((val, idx)) = minutes.iter().zip(0..).max_by_key(|&(val, idx)| val) {
+            // println!("minutes: {} @ {} ---- {:?}", idx, val, &minutes);
+            return k * idx;
+        }
+    } 
+    panic!("No Result");
 }
 
 #[cfg(test)]
