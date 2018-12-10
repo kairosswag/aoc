@@ -155,11 +155,3 @@ pub fn part2(protocol: &[Timestamp]) -> u32 {
     }
     panic!("No result found!");
 }
-
-#[cfg(test)]
-pub mod test {
-    #[test]
-    fn regex_test() {
-        unimplemented!();
-    }
-}
