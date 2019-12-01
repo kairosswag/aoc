@@ -1,0 +1,12 @@
+[package]
+name = "advent_of_code_2019"
+version = "0.1.0"
+authors = ["Kai Rosswag <kairosswag@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+aoc-runner = '*'
+aoc-runner-derive = '*'
+
+regex = "1"
+derive-new = "0.5"
