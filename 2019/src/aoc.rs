@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+// use std::collections::HashSet;
 use std::cmp::*;
 
 #[aoc_generator(day1)]
@@ -209,14 +209,14 @@ pub fn parse_directions(input: &str) -> (Vec<Direction>, Vec<Direction>) {
         .split(',')
         .map(|d| d.chars().collect())
         .map(|arr: Vec<char>| {
-            match ((
+            match (
                 arr[0],
                 arr[1..]
                     .into_iter()
                     .collect::<String>()
                     .parse::<u32>()
                     .unwrap(),
-            )) {
+            ) {
                 ('U', x) => Direction::UP(x),
                 ('D', x) => Direction::DOWN(x),
                 ('L', x) => Direction::LEFT(x),
@@ -231,14 +231,14 @@ pub fn parse_directions(input: &str) -> (Vec<Direction>, Vec<Direction>) {
         .split(',')
         .map(|d| d.chars().collect())
         .map(|arr: Vec<char>| {
-            match ((
+            match (
                 arr[0],
                 arr[1..]
                     .into_iter()
                     .collect::<String>()
                     .parse::<u32>()
                     .unwrap(),
-            )) {
+            ) {
                 ('U', x) => Direction::UP(x),
                 ('D', x) => Direction::DOWN(x),
                 ('L', x) => Direction::LEFT(x),
@@ -296,7 +296,7 @@ pub fn day3_2(input: &(Vec<Direction>, Vec<Direction>)) -> u32 {
     let mut curr_pos = Pos::new(0, 0);
     let mut distances = Vec::new();
     let mut steps = 0;
-    for (idx, dir) in b.iter().enumerate() {
+    for (_idx, dir) in b.iter().enumerate() {
         let next = dir.transform(&curr_pos);
         let b_line = Line::new(curr_pos, next);
         for (a_line, a_steps, a_start_pos) in &line_soup_a {
@@ -310,6 +310,82 @@ pub fn day3_2(input: &(Vec<Direction>, Vec<Direction>)) -> u32 {
         curr_pos = next;
     }
     *distances.iter().min().unwrap()
+}
+
+#[aoc_generator(day4)]
+pub fn day4_generator(_input: &str) -> (u32, u32) {
+    (136818, 685979)
+}
+
+#[aoc(day4, part1)]
+pub fn day4_1(input: &(u32, u32)) -> u32 {
+    let &(low, high) = input;
+    let mut counter = 0;
+    'outer: for i in low ..= high {
+        if check_input(i) {
+            counter += 1;
+        }
+    }
+    counter
+}
+
+fn check_input(i: u32) -> bool {
+    // take the last pair, then cut off the next value
+    let mut curr_val = i;
+    let mut found_double = false;
+    for _val in 0 .. 5 {
+        let pair = curr_val % 100;
+        curr_val = curr_val / 10;
+
+        // break if it is not ascending
+        if pair / 10 > pair % 10 { 
+            return false;
+        }
+
+        if pair / 10 == pair % 10 {
+            found_double = true;
+        }
+
+    }
+
+    found_double
+}
+
+#[aoc(day4, part2)]
+pub fn day4_2(input: &(u32, u32)) -> u32 {
+    let &(low, high) = input;
+    let mut counter = 0;
+    for i in low ..= high {
+        if check_input_2(i) {
+            counter += 1;
+        }
+    }
+    counter
+}
+
+fn check_input_2(i: u32) -> bool {
+    // take the last pair, then cut off the next value
+    let mut curr_val = i;
+    let mut double_count = 0;
+    let mut found_true_double = false;
+    for _val in 0 .. 5 {
+        let pair = curr_val % 100;
+        curr_val = curr_val / 10;
+
+        // break if it is not ascending
+        if pair / 10 > pair % 10 { 
+            return false;
+        }
+
+        match (pair / 10 == pair % 10, double_count) {
+            (false, x) if x == 1 => found_true_double = true, // true double found, we can disregard all match
+            (false, _) => double_count = 0,
+            (true, _) => double_count += 1,
+        }
+
+    }
+
+    (double_count == 1) || found_true_double
 }
 
 #[cfg(test)]
@@ -335,5 +411,12 @@ mod tests {
         let ver2 = Line::new(Pos::new(0, 5), Pos::new(0, 0));
         assert_eq!(hor.intersect(&ver), Some(Pos::new(0, 0)));
         assert_eq!(hor.intersect(&ver2), None); 
+    }
+
+    #[test]
+    fn test4() {
+        assert_eq!(check_input_2(112233), true);
+        assert_eq!(check_input_2(123444), false);
+        assert_eq!(check_input_2(111122), true);
     }
 }

@@ -2,8 +2,8 @@ extern crate aoc_runner;
 
 #[macro_use]
 extern crate aoc_runner_derive;
-#[macro_use]
-extern crate derive_new;
+// #[macro_use]
+// extern crate derive_new;
 
 pub mod aoc;
 // pub mod day1;
