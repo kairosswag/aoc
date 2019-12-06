@@ -50,6 +50,31 @@ pub fn day6_1(relationships: &[OrbitRelationship]) -> u32 {
     distances.values().fold(0, |a, b| a + b)
 }
 
+#[aoc(day6, part2)]
+pub fn day6_2(relationships: &[OrbitRelationship]) -> u32 {
+    let mut rels = HashMap::new();
+    for rel in relationships {
+        rels.insert(rel.orbiter, rel.orbitee);
+    }
+    let mut com_stack = Vec::new();
+    let mut curr = Orb::from("YOU");
+    while let Some(rel) = rels.get(&curr) {
+        com_stack.push(rel);
+        curr = *rel;
+    }
+    curr = Orb::from("SAN");
+    let mut descs = 0;
+    while let Some(rel) = rels.get(&curr) {
+        if let Some(position) = com_stack.iter().position(|&e| e.eq(rel)) {
+            return descs + (position as u32);
+        } else {
+            descs += 1;
+            curr = *rel;
+        }
+    }
+    23
+}
+
 pub fn depths(relationships: &[OrbitRelationship], mut distances: &mut HashMap<Orb, u32>, value: &Orb) -> u32 {
     if let Some(val) = distances.get(value) {
         return *val;
